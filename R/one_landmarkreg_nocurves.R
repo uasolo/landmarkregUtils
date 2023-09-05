@@ -22,9 +22,10 @@
 #' @export
 #'
 #' @examples
-#' inputMarks <- c(0, 1,  2)
-#' targetMarks <-  c(0, 19,  20)
+#' inputMarks <- c(0, 1, 1.5, 2)
+#' targetMarks <- c(0, 0.5, 1, 1.3)
 #' h <- one_landmarkreg_nocurves(inputMarks, targetMarks)
+#' plot(h, type = 'l', xlab = 'registered time', ylab = 'original time')
 one_landmarkreg_nocurves <- function(inputMarks, targetMarks, WfdPar=NULL, wlambda=1e-14) {
   if (length(inputMarks) != length(targetMarks)) {
     stop("The same number of input and target lanmarks should be provided")

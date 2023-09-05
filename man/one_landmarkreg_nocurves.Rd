@@ -37,7 +37,8 @@ as smooth.morph does not yield the expected results
 when operating on other intervals, e.g. when they differ too much from one another.
 }
 \examples{
-inputMarks <- c(0, 1,  2)
-targetMarks <-  c(0, 19,  20)
+inputMarks <- c(0, 1, 1.5, 2)
+targetMarks <- c(0, 0.5, 1, 1.3)
 h <- one_landmarkreg_nocurves(inputMarks, targetMarks)
+plot(h, type = 'l', xlab = 'registered time', ylab = 'original time')
 }
