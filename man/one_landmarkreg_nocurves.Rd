@@ -2,7 +2,7 @@
 % Please edit documentation in R/one_landmarkreg_nocurves.R
 \name{one_landmarkreg_nocurves}
 \alias{one_landmarkreg_nocurves}
-\title{Compute time warping}
+\title{Compute one landmark-based time warping function}
 \usage{
 one_landmarkreg_nocurves(
   inputMarks,

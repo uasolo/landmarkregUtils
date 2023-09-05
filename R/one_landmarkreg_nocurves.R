@@ -1,4 +1,4 @@
-#' Compute time warping
+#' Compute one landmark-based time warping function
 #'
 #' Computes the time warping function h(t) so that input landmarks are moved to corresponding target landmarks.
 #' Both input and target landmarks are first linearly mapped to (0,1),

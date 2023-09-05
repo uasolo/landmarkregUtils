@@ -9,6 +9,10 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 Imports: 
-    fda
+    fda,
+    foreach
 URL: https://github.com/uasolo/landmarkregUtils
 BugReports: https://github.com/uasolo/landmarkregUtils/issues
+Suggests: 
+    doParallel,
+    parallel
