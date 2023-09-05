@@ -1,0 +1,41 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# landmarkregUtils
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of landmarkregUtils is to provide a flexible version of the `fda::landmarkreg` function. Essentially, the computation of time warping functions $h(t)$ and their use to register curves are decoupled. 
+Wrapper functions allow to either apply landmark registration directly on curve samples, thus hiding the `fda` details to the user, or on `fd` objects. In the latter case, the log rate of the warping function, i.e. $r(t) = - \log(\frac{dh}{dt})$, is also returned. 
+
+## Installation
+
+You can install the development version of landmarkregUtils from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("uasolo/landmarkregUtils")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(landmarkregUtils)
+## basic example code
+```
+

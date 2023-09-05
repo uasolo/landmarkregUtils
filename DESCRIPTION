@@ -10,3 +10,5 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 Imports: 
     fda
+URL: https://github.com/uasolo/landmarkregUtils
+BugReports: https://github.com/uasolo/landmarkregUtils/issues
