@@ -9,10 +9,14 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
+    dplyr,
     fda,
-    foreach
+    foreach,
+    magrittr,
+    tidyr
 URL: https://github.com/uasolo/landmarkregUtils
 BugReports: https://github.com/uasolo/landmarkregUtils/issues
 Suggests: 
     doParallel,
+    ggplot2,
     parallel

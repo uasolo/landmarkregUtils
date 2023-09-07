@@ -26,5 +26,5 @@
 landmarkreg_timeSamples <- function(timeSamples, inputMarks, targetMarks, WfdPar=NULL, wlambda=1e-14) {
   h <- one_landmarkreg_nocurves(inputMarks, targetMarks, WfdPar, wlambda)
   hinv_fd <- fda::Data2fd(h, seq(0, max(targetMarks), length.out = length(h)))
-  return(fda::eval.fd(timeSamples, hinv_fd))
+  return(t2treg(timeSamples, hinv_fd))
 }
