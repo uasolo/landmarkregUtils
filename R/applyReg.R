@@ -28,17 +28,22 @@
 #' @export
 #'
 #' @examples
-applyReg <- function(dat, reg, grid=NULL, columnNames=NULL) {
+applyReg <- function(dat, reg, grid=NULL, id=NULL, time=NULL, value=NULL) {
+  # Checks
+  if (!(any(c("data.frame", "irregFunData", "funData", "multiFunData") %in% class(dat)))) {
+    stop(paste0("dat is of class ", class(dat), ", which is neither a data frame nor a funData object."))
+  }
   maxT <- reg$h$basis$rangeval[2]
-  # checks
   if (is.data.frame(dat)) {
-    if (!is.list(columnNames)) {
-      stop("When dat is a data.frame, column should be a list with keys: .obs, .index, .value.")
+    colnames_ <- colnames(dat)
+    if (is.null(id)) id <- colnames_[1]
+    if (is.null(time)) time <- colnames_[2]
+    if (is.null(value)) value <- colnames_[-c(1,2)]
+    if (!all(c(id, time, value) %in% colnames_)) {
+      stop("One or more of the arguments id, time and value do not match any dat column names.")
     }
-    if (!all(c(".obs", ".index", ".value") %in% names(columnNames))) {
-      stop("When dat is a data.frame, columnNames should be a list with keys: .obs, .index, .value.")
-    }
-    if ((ndat_ <- dat %>% dplyr::pull(columnNames$.obs) %>% dplyr::n_distinct()) != (nreg_ <- ncol(reg$h$coefs))) {
+
+    if ((ndat_ <- dat %>% dplyr::pull({{id}}) %>% dplyr::n_distinct()) != (nreg_ <- ncol(reg$h$coefs))) {
       stop(paste0("The number of observations (curves) in dat (", ndat_,
       ") should match the number of warping functions in reg (", nreg_, ")."))
     }
@@ -51,32 +56,66 @@ applyReg <- function(dat, reg, grid=NULL, columnNames=NULL) {
   if (is.null(grid) & !("hinv" %in% names(reg)) ) {
     stop("reg object does not contain hinv. Re-run landmarkreg_nocurves() setting compute_hinv = TRUE")
   }
-  # computation
-  if (is.data.frame(dat)) {
-    if (is.null(grid)) {
-      return(
-        dat %>%
-          dplyr::mutate(ID_ = .data[[columnNames$.obs]] %>% factor(levels = unique(.))) %>%
-          dplyr::group_by(ID_) %>%
-          dplyr::mutate(treg = t2treg(.data[[columnNames$.index]], reg$hinv[[dplyr::cur_group_id()]])) %>%
-          dplyr::ungroup() %>%
-          dplyr::select(!ID_)
-      )
+  # Format and dispatch to applyRegDf()
+  # datList is of length = number of curve dimensions
+  if ("multiFunData" %in% class(dat)) {
+    datList <- dat
+  } else if (any(c("irregFunData", "funData") %in% class(dat))) {
+    datList <- list(dat)
+  } else { # dataframe
+    datList <- lapply(value, function(v) {
+      dat %>%
+        dplyr::select(dplyr::all_of(c({{id}}, {{time}}, {{v}})))
+    })
+  }
+
+  # resList contains the results by dimension
+  # (irreg)FunData objects are converted to tibbles then reconverted back
+  # after applyRegDf() is called on them
+  resList <- lapply(seq_along(datList), function(i) {
+    if (any(c("irregFunData", "funData") %in% class(datList[[i]]))) {
+      df <- funData2long(datList[[i]], id = id, time = time, value = value[i])
+    } else {
+      df <- datList[[i]]
+    }
+    res <- applyRegDf(df, reg, grid, id, time, value = value[i])
+    if (any(c("irregFunData", "funData") %in% class(datList[[i]]))) {
+      res <- long2irregFunData(res)
+      if (!is.null(grid)) {
+        res <- funData::as.funData(res)
+      }
+    }
+    return(res)
+  })
+  if ("data.frame" %in% class(dat)) {
+    if (length(resList) == 1) {
+      return(resList[[1]])
     } else {
       return(
-        dat %>%
-          dplyr::mutate(ID_ = .data[[columnNames$.obs]] %>% factor(levels = unique(.))) %>%
-          dplyr::group_by(ID_, .data[[columnNames$.obs]]) %>%
-          dplyr::reframe(treg = {{grid}},
-                         valuereg = val_at_treg(.data[[columnNames$.index]],
-                                                .data[[columnNames$.value]],
-                                                {{grid}},
-                                                reg$h[dplyr::cur_group_id()])) %>%
-          dplyr::select(!ID_)
-
+        dplyr::bind_cols(resList[[1]],
+                         lapply(2:length(resList), function(i) {
+                           resList[[i]] %>% dplyr::select(dplyr::all_of(value[i]))
+                         } ))
       )
     }
+  } else if (any(c("irregFunData", "funData") %in% class(dat))) {
+    res <- long2irregFunData(resList[[1]])
+    if (!is.null(grid())) {
+      res <- funData::as.funData(res)
+    }
+    return(res)
+  } else if ("multiFunData" %in% class(dat)) {
+    return(
+      lapply(resList, function(res) {
+        long2irregFunData(res)
+        if (!is.null(grid())) {
+          res <- funData::as.funData(res)
+        }
+      }) %>%
+        funData::as.multiFunData()
+    )
   }
+
 
 
   return(0)

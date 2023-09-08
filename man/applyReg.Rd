@@ -4,7 +4,7 @@
 \alias{applyReg}
 \title{Apply already computed time warping to a set of curves}
 \usage{
-applyReg(dat, reg, grid = NULL, columnNames = NULL)
+applyReg(dat, reg, grid = NULL, id = NULL, time = NULL, value = NULL)
 }
 \arguments{
 \item{dat}{Either a long form dataframe or a (\code{irreg})\code{funData} object containing a data set of curves.

@@ -4,14 +4,14 @@
 \alias{long2list}
 \title{Convert a two-column long form dataframe into a list}
 \usage{
-long2list(dat, keys, values)
+long2list(df, keys = names(df)[1], values = names(df)[2])
 }
 \arguments{
-\item{dat}{A dataframe in long format containing at least two columns}
+\item{df}{A dataframe in long format containing at least two columns}
 
-\item{keys}{String, the column name that will become the list key}
+\item{keys}{String, the column name that will become the list key (default: 1st column of \code{df})}
 
-\item{values}{String, the column name that will become the value}
+\item{values}{String, the column name that will become the value (default: 2nd column of \code{df})}
 }
 \value{
 A list with as many keys as there are unique values of the \code{keys} column,

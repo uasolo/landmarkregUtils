@@ -2,20 +2,20 @@
 % Please edit documentation in R/funData2long1.R
 \name{funData2long1}
 \alias{funData2long1}
-\title{Convert a (irreg)FunData object containing only one curve into a dataframe}
+\title{Convert a (irreg)FunData object containing only one curve into a tibble}
 \usage{
-funData2long1(fd, columnNames = NULL)
+funData2long1(fd, time = "time", value = "value")
 }
 \arguments{
 \item{fd}{A (irreg)FunData object containing only one curve}
 
-\item{columnNames}{(optional) list indicating the column names corresponding to \code{fd@argvals} and \code{fd@X},
-indicated by \code{.index} and \code{.value}, respectively.
-If \code{NULL}, column names are \code{argvals} and \code{X}.}
+\item{time}{Desired column name corresponding to the time axis (default "time")}
+
+\item{value}{Desired name corresponding to the values at \code{time} (default "value)}
 }
 \value{
 A two-column tibble in long format
 }
 \description{
-Convert a (irreg)FunData object containing only one curve into a dataframe
+Convert a (irreg)FunData object containing only one curve into a tibble
 }

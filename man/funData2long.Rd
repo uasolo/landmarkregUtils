@@ -2,20 +2,22 @@
 % Please edit documentation in R/funData2long.R
 \name{funData2long}
 \alias{funData2long}
-\title{Convert a (irreg)FunData object into a dataframe}
+\title{Convert a (irreg)FunData object into a tibble}
 \usage{
-funData2long(fd, columnNames = NULL)
+funData2long(fd, id = "id", time = "time", value = "value")
 }
 \arguments{
 \item{fd}{A (irreg)FunData object}
 
-\item{columnNames}{(optional) list indicating the column names corresponding to \code{fd@argvals}, \code{fd@X},
-and the curve ID, indicated by \code{.index}, \code{.value} and \code{.obs}, respectively.
-If \code{NULL}, column names are \code{argvals}, \code{X} and \code{ID}.}
+\item{id}{Desired column name corresponding to the curve id (default "id")}
+
+\item{time}{Desired column name corresponding to the time axis (default "time")}
+
+\item{value}{Desired name corresponding to the values at \code{time} (default "value")}
 }
 \value{
 A three-column tibble in long format
 }
 \description{
-Convert a (irreg)FunData object into a dataframe
+Convert a (irreg)FunData object into a tibble
 }

@@ -3,6 +3,7 @@
 export("%>%")
 export(WfdPar_for_reg)
 export(applyReg)
+export(applyRegDf)
 export(funData2long)
 export(funData2long1)
 export(landmarkreg_nocurves)

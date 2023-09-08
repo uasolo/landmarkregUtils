@@ -4,18 +4,26 @@
 \alias{long2irregFunData}
 \title{Convert a set of curves encoded as long form dataframe to a irregFunData}
 \usage{
-long2irregFunData(df, columnNames)
+long2irregFunData(
+  df,
+  id = names(df)[1],
+  time = names(df)[2],
+  value = names(df)[3]
+)
 }
 \arguments{
 \item{df}{A dataframe containing at least three columns}
 
-\item{columnNames}{A list with three entries: \code{.obs}, \code{.index} and \code{.value},
-the values of which are the column names of \code{df} corresponding to
-curve ID, time samples and sample values, respectively.}
+\item{id}{Column name of \code{df} corresponding to curve index (default: 1st column of \code{df})}
+
+\item{time}{Column name of \code{df} corresponding to the time axis (default: 2nd column of \code{df})}
+
+\item{value}{Column name of \code{df} corresponding to the values at \code{time} (default: 3rd column of \code{df})}
 }
 \value{
 An object of class \code{funData::irregFunData}
 }
 \description{
-Convert a set of curves encoded as long form dataframe to a irregFunData
+The column names for curve id, time and value have to be specified.
+If not, they are assumed to be the first three columns in this order: id, time, value.
 }
