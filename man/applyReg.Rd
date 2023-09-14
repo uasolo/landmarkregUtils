@@ -7,32 +7,38 @@
 applyReg(dat, reg, grid = NULL, id = NULL, time = NULL, value = NULL)
 }
 \arguments{
-\item{dat}{Either a long form dataframe or a (\code{irreg})\code{funData} object containing a data set of curves.
+\item{dat}{Either a long form dataframe or a (\code{*})\code{funData} object containing a data set of curves.
 In the dataframe case, it should have at least three columns mapping to \code{.obs} (the curve ID), \code{.index} (the time sample) and \code{.value} (the corresponding value).
-The dataframe is assumed to be ordered by \code{.obs} and within \code{.obs} by \code{.index} and \code{.value}.
-The order of \code{.obs} should match the order of h(t) in \code{reg}.
-In the case of (\code{irreg})\code{funData}, the order of stored curves (in \verb{@X}) should match the order of h(t) in \code{reg}.}
+The dataframe is assumed to be ordered by \code{id} and within \code{id} by \code{time}.
+The order of \code{id} should match the order of h(t) in \code{reg}.
+In the case of (\code{*})\code{funData}, the order of stored curves (in \verb{@X}) should match the order of h(t) in \code{reg}.}
 
 \item{reg}{A list with at least key \code{h}, containing the result of landmark registration operated by \code{\link[=landmarkreg_nocurves]{landmarkreg_nocurves()}}.}
 
 \item{grid}{A vector of time samples defined on the registered time axis.
-If specified, the value of the curves in \code{dat} at those time points will be computed,
+If specified, the value of the curves in \code{dat} at those time points are computed,
 which entails an interpolation of the original curves (via \code{fda::Data2fd()}).
 If \code{NULL}, the registered curve values will be computed at the respective h(t),
 i.e. at the time points on the registered time axis corresponding to those provided in \code{dat}.
 In the latter case, \code{reg} should include the \code{hinv} entry.}
 
-\item{columnNames}{Mandatory when \code{dat} is a dataframe, disregarded otherwise.
-A list with three entries: \code{.obs}, \code{.index} and \code{.value}, the values of which are the column names of \code{dat} corresponding to
-curve ID, time samples and sample values, respectively.}
+\item{id}{Column name of \code{dat} corresponding to curve index (default: 1st column).
+Not used if \code{dat} is a (\code{*})\code{funData}.}
+
+\item{time}{Column name of \code{dat} corresponding to the time axis (default: 2nd column).
+Not used if \code{dat} is a (\code{*})\code{funData}.}
+
+\item{value}{Column name(s) of \code{dat} corresponding to the values at \code{time}.
+For multi-dimensional data, a vector of strings (default: columns from 3rd to last).
+Not used if \code{dat} is a (\code{*})\code{funData}.}
 }
 \value{
 The registered curves in the same format as \code{dat}.
 }
 \description{
-Given a set of curves and a corresponding set of time warping functions,
+Given a set of curves and a corresponding set of time warping functions h(t),
 typically computed with \code{\link[=landmarkreg_nocurves]{landmarkreg_nocurves()}}, obtain the transformed curves.
-The curves can be encoded in long form dataframe or as (\code{irreg})\code{funData}.
+The curves can be encoded either as long form dataframe or as (\code{irreg})\code{funData}.
 The result is provided in the same format as the input.
 A desired time point grid on the registered time axis can be provided,
 otherwise the time points for each curve are obtained by mapping the original ones according to the respective h(t).

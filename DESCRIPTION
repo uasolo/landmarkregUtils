@@ -12,7 +12,9 @@ Imports:
     dplyr,
     fda,
     foreach,
+    funData,
     magrittr,
+    purrr,
     tidyr
 URL: https://github.com/uasolo/landmarkregUtils
 BugReports: https://github.com/uasolo/landmarkregUtils/issues
