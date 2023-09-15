@@ -8,7 +8,8 @@
 #' otherwise the time points for each curve are obtained by mapping the original ones according to the respective h(t).
 #'
 #' @param dat Either a long form dataframe or a (`*`)`funData` object containing a data set of curves.
-#' In the dataframe case, it should have at least three columns mapping to `.obs` (the curve ID), `.index` (the time sample) and `.value` (the corresponding value).
+#' In the dataframe case, it should have at least three columns mapping to `id` (the curve ID),
+#'  `time` (the time sample) and `value` (the corresponding value).
 #' The dataframe is assumed to be ordered by `id` and within `id` by `time`.
 #' The order of `id` should match the order of h(t) in `reg`.
 #' In the case of (`*`)`funData`, the order of stored curves (in `@X`) should match the order of h(t) in `reg`.
@@ -103,7 +104,7 @@ applyReg <- function(dat, reg, grid=NULL, id=NULL, time=NULL, value=NULL) {
     res <- applyRegDf(df, reg, grid, id, time, value = value[i])
     if (any(c("irregFunData", "funData") %in% class(datList[[i]]))) {
       res <- long2irregFunData(res)
-      if (!is.null(grid)) {
+      if (!is.null(grid) | "multiFunData" %in% class(dat)) {
         res <- funData::as.funData(res)
       }
     }
@@ -115,39 +116,11 @@ applyReg <- function(dat, reg, grid=NULL, id=NULL, time=NULL, value=NULL) {
     if ("data.frame" %in% class(dat)) {
       return(
         purrr::reduce(resList, dplyr::left_join, by = c({{id}}, {{time}}))
-        # dplyr::bind_cols(resList[[1]],
-        #                  lapply(2:length(resList), function(i) {
-        #                    resList[[i]] %>% dplyr::select(dplyr::all_of(value[i]))
-        #                  } ))
       )
     } else {
       return(funData::multiFunData(resList))
     }
   }
-
-
-  #
-  #
-  #
-  #   if (any(c("irregFunData", "funData") %in% class(dat))) {
-  #   res <- long2irregFunData(resList[[1]])
-  #   if (!is.null(grid())) {
-  #     res <- funData::as.funData(res)
-  #   }
-  #   return(res)
-  # } else if ("multiFunData" %in% class(dat)) {
-  #   return(
-  #     lapply(resList, function(res) {
-  #       long2irregFunData(res)
-  #       if (!is.null(grid())) {
-  #         res <- funData::as.funData(res)
-  #       }
-  #     }) %>%
-  #       funData::as.multiFunData()
-  #   )
-  # }
-
-
 
   return(0)
 }

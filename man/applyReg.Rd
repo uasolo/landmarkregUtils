@@ -8,7 +8,8 @@ applyReg(dat, reg, grid = NULL, id = NULL, time = NULL, value = NULL)
 }
 \arguments{
 \item{dat}{Either a long form dataframe or a (\code{*})\code{funData} object containing a data set of curves.
-In the dataframe case, it should have at least three columns mapping to \code{.obs} (the curve ID), \code{.index} (the time sample) and \code{.value} (the corresponding value).
+In the dataframe case, it should have at least three columns mapping to \code{id} (the curve ID),
+\code{time} (the time sample) and \code{value} (the corresponding value).
 The dataframe is assumed to be ordered by \code{id} and within \code{id} by \code{time}.
 The order of \code{id} should match the order of h(t) in \code{reg}.
 In the case of (\code{*})\code{funData}, the order of stored curves (in \verb{@X}) should match the order of h(t) in \code{reg}.}

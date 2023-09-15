@@ -12,9 +12,9 @@ funData2long1 <- function(fd, time="time", value="value") {
   argvals <- fd@argvals[[1]]
   if (is.list(fd@X)) {
     X <- fd@X[[1]] %>% as.numeric()
-  } else { # matrix
+  } else { # 1-row matrix
     X <- fd@X %>% as.numeric()
   }
-  return(dplyr::tibble(!!{{time}} := argvals,
-                       !!{{value}} := X))
+  return(dplyr::tibble(!!{{time}} := argvals[!is.na(X)],
+                       !!{{value}} := X[!is.na(X)]))
 }
