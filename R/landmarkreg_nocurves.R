@@ -25,6 +25,8 @@
 #'
 #' `lograte`: - log (dh/dt)
 #'
+#' `landmarks`: location of target landmarks
+#'
 #' `hinv`: (optional) a list of `fd` objects, one for each row of `inputMarks`
 #'
 #' @export
@@ -32,7 +34,7 @@
 #' @examples
 #' inputMarks <- matrix(c(0, 0.5, 1, 2, 0, 0.7, 1.2, 1.9, 0, 0.4, 1.1, 2.2), nrow=3, byrow = TRUE)
 #' reg <- landmarkreg_nocurves(inputMarks)
-landmarkreg_nocurves <- function(inputMarks, targetMarks=NULL, compute_hinv=FALSE, njobs=1,
+landmarkreg_nocurves <- function(inputMarks, targetMarks=NULL, compute_hinv=TRUE, njobs=1,
                                  WfdPar=NULL, wlambda=1e-14) {
   inputMarks <- as.matrix(inputMarks)
   # checks
@@ -109,7 +111,7 @@ landmarkreg_nocurves <- function(inputMarks, targetMarks=NULL, compute_hinv=FALS
   hx <- seq(0, max(targetMarks), length.out = nrow(hmat))
   h <- fda::smooth.basis(argvals = hx, y = hmat, fdParobj = fdParobj)$fd
   logvelfd <- fda::smooth.basis(hx, - log(fda::eval.fd(hx, h ,Lfdobj = 1)) ,fdParobj)$fd
-  reg <- list(h = h, logvelfd = logvelfd)
+  reg <- list(h = h, logvelfd = logvelfd, landmarks = targetMarks)
   if (compute_hinv) {
     hinv <- lapply(seq_len(ncol(hmat)), function(i) {
       fda::Data2fd(hmat[,i], hx)
