@@ -7,7 +7,7 @@
 landmarkreg_nocurves(
   inputMarks,
   targetMarks = NULL,
-  compute_hinv = FALSE,
+  compute_hinv = TRUE,
   njobs = 1,
   WfdPar = NULL,
   wlambda = 1e-14
@@ -34,6 +34,8 @@ A list with the following keys:
 \code{h}: a \code{fd} object with as many h(t) as the number of rows of \code{inputMarks}
 
 \code{lograte}: - log (dh/dt)
+
+\code{landmarks}: location of target landmarks
 
 \code{hinv}: (optional) a list of \code{fd} objects, one for each row of \code{inputMarks}
 }
