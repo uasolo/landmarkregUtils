@@ -18,4 +18,5 @@ A vector of the same length of \code{argvals}
 An auxiliary thin wrapper to \code{fda::eval.fd()}.
 Given an already computed inverse time warping function \code{hinv},
 map original time points \code{argvals} to their registered position \code{hinv}(\code{argvals}).
+Values outside the range of \code{hinv} are mapped to \code{NA}s.
 }
