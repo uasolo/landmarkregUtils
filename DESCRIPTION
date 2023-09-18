@@ -15,6 +15,7 @@ Imports:
     funData,
     magrittr,
     purrr,
+    tibble,
     tidyr
 URL: https://github.com/uasolo/landmarkregUtils
 BugReports: https://github.com/uasolo/landmarkregUtils/issues
