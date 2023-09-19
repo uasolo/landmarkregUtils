@@ -18,5 +18,5 @@ containing the integral values.
 }
 \description{
 Compute a definite integral for each of the uni-dimensional functions
-in fdobj from rng\link{1} to rng\link{2}.
+in fdobj from rng[1] to rng[2].
 }
