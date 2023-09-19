@@ -25,7 +25,7 @@ landmarks2long <- function(landmarks, form="boundaries", id=NULL) {
     landmarks <- landmarks %>%
       as.list() %>%
       `names<-`(paste0("l", seq_along(.))) %>%
-      tibble::as.tibble()
+      tibble::as_tibble()
   }
   if (!is.null(id)) {
     if (!(id %in% colnames(landmarks))) {
