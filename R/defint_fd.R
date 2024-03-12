@@ -1,7 +1,7 @@
 #' Definite integral
 #'
 #' Compute a definite integral for each of the uni-dimensional functions
-#'   in fdobj from rng[1] to rng[2].
+#'   in `fdobj` from `rng[1]` to `rng[2]`.
 #'
 #' @param fdobj Object of class `fda::fd` containing uni-dimensional curve(s) to integrate
 #' @param rng Numeric vector of length 2 specifying the limits of integration.

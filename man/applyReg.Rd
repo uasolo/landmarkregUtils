@@ -44,3 +44,19 @@ The result is provided in the same format as the input.
 A desired time point grid on the registered time axis can be provided,
 otherwise the time points for each curve are obtained by mapping the original ones according to the respective h(t).
 }
+\examples{
+library(dplyr)
+library(tibble)
+# first generate a landmark registration object
+inputMarks <- matrix(c(0, 0.5, 1, 2, 0, 0.7, 1.2, 1.9, 0, 0.4, 1.1, 2.2), nrow=3, byrow = TRUE)
+reg <- landmarkreg_nocurves(inputMarks)
+# generate corresponding curves
+curves <- tibble(id = 1:3) \%>\%
+  group_by(id) \%>\%
+  reframe(time = seq(0, max(inputMarks[id,]), by = 0.1), value = 0.1 * id **2)
+# version without specification of grid
+regCurves <- applyReg(curves, reg)
+# version with grid
+grid <- seq(0, 2, by = 0.5)
+regCurves <- applyReg(curves, reg, grid)
+}

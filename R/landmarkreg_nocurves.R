@@ -114,7 +114,7 @@ landmarkreg_nocurves <- function(inputMarks, targetMarks=NULL, compute_hinv=TRUE
   reg <- list(h = h, logvelfd = logvelfd, landmarks = targetMarks)
   if (compute_hinv) {
     hinv <- lapply(seq_len(ncol(hmat)), function(i) {
-      fda::Data2fd(hmat[,i], hx)
+      fda::Data2fd(hmat[,i], matrix(hx))
     })
     reg$hinv <- hinv
   }

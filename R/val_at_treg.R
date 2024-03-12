@@ -30,6 +30,6 @@ val_at_treg <- function(argvals, vals, argvalreg, h) {
   if (max(argvalreg_inv) > max(argvals)) {
     argvals[length(argvals)] <- max(argvalreg_inv)
   }
-  yfd <- fda::Data2fd(argvals[!is.na(vals)], vals[!is.na(vals)])
+  yfd <- fda::Data2fd(argvals[!is.na(vals)], matrix(vals[!is.na(vals)]))
   return(fda::eval.fd(argvalreg_inv, yfd[1]) %>% as.numeric())
 }

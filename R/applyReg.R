@@ -33,6 +33,20 @@
 #' @export
 #'
 #' @examples
+#' library(dplyr)
+#' library(tibble)
+#' # first generate a landmark registration object
+#' inputMarks <- matrix(c(0, 0.5, 1, 2, 0, 0.7, 1.2, 1.9, 0, 0.4, 1.1, 2.2), nrow=3, byrow = TRUE)
+#' reg <- landmarkreg_nocurves(inputMarks)
+#' # generate corresponding curves
+#' curves <- tibble(id = 1:3) %>%
+#'   group_by(id) %>%
+#'   reframe(time = seq(0, max(inputMarks[id,]), by = 0.1), value = 0.1 * id **2)
+#' # version without specification of grid
+#' regCurves <- applyReg(curves, reg)
+#' # version with grid
+#' grid <- seq(0, 2, by = 0.5)
+#' regCurves <- applyReg(curves, reg, grid)
 applyReg <- function(dat, reg, grid=NULL, id=NULL, time=NULL, value=NULL) {
   # Checks
   if (!(any(c("data.frame", "irregFunData", "funData", "multiFunData") %in% class(dat)))) {
