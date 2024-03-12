@@ -110,8 +110,8 @@ landmarkreg_nocurves <- function(inputMarks, targetMarks=NULL, compute_hinv=TRUE
   fdParobj <- fda::fdPar(fda::fd(matrix(0,hbasis$nbasis,1), hbasis))
   hx <- seq(0, max(targetMarks), length.out = nrow(hmat))
   h <- fda::smooth.basis(argvals = hx, y = hmat, fdParobj = fdParobj)$fd
-  logvelfd <- fda::smooth.basis(hx, - log(fda::eval.fd(hx, h ,Lfdobj = 1)) ,fdParobj)$fd
-  reg <- list(h = h, logvelfd = logvelfd, landmarks = targetMarks)
+  lograte <- fda::smooth.basis(hx, - log(fda::eval.fd(hx, h ,Lfdobj = 1)) ,fdParobj)$fd
+  reg <- list(h = h, lograte = lograte, landmarks = targetMarks)
   if (compute_hinv) {
     hinv <- lapply(seq_len(ncol(hmat)), function(i) {
       fda::Data2fd(hmat[,i], matrix(hx))
