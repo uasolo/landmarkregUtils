@@ -2,7 +2,7 @@
 % Please edit documentation in R/long2irregFunData.R
 \name{long2irregFunData}
 \alias{long2irregFunData}
-\title{Convert a set of curves encoded as long form dataframe to a irregFunData}
+\title{Convert a set of curves encoded as long form dataframe to an irregFunData object}
 \usage{
 long2irregFunData(
   df,
@@ -24,6 +24,11 @@ long2irregFunData(
 An object of class \code{funData::irregFunData}
 }
 \description{
-The column names for curve id, time and value have to be specified.
-If not, they are assumed to be the first three columns in this order: id, time, value.
+The long form dataframe should have at least three columns: curve id, time and value.
+Their names have to be specified, else they are assumed to be the first three columns in this order: id, time, value.
+Time and value specify samples for each curve, curve id identifies the curves.
+The conversion to \code{funData::irregFunData} places the first curve at \code{argvals[[1]]}, \code{X[[1]]},
+the second curve at \code{argvals[[2]]}, \code{X[[2]]}, etc., using the order of appearance of curve id in the dataframe,
+i.e. not alphabetic or factor order.
+Note that the original id's are not stored in the \code{irregFunData} object.
 }
