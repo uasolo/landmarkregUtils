@@ -100,6 +100,9 @@ landmarkreg_nocurves <- function(inputMarks, targetMarks=NULL, compute_hinv=TRUE
                     one_landmarkreg_nocurves(inputMarks[i,], targetMarks, WfdPar, wlambda)
                   }
   )
+  if (is.vector(hmat)) { # only one set of landmarks in inputMarks
+    hmat <- matrix(hmat, ncol = 1)
+  }
   if (njobs > 1) {
     parallel::stopCluster(cl)
   }
