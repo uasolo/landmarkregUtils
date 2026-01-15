@@ -25,9 +25,9 @@ Wrapper functions allow to either apply landmark registration directly on curve 
 
 You can install the development version of landmarkregUtils from [GitHub](https://github.com/) with:
 
-``` r
+``` {r, eval = FALSE}
 # install.packages("devtools")
-devtools::install_github("uasolo/landmarkregUtils")
+devtools::install_github("uasolo/landmarkregUtils", build_vignettes = TRUE)
 ```
 
 There are vignettes available:

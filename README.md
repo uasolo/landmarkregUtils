@@ -22,7 +22,7 @@ You can install the development version of landmarkregUtils from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("uasolo/landmarkregUtils")
+devtools::install_github("uasolo/landmarkregUtils", build_vignettes = TRUE)
 ```
 
 There are vignettes available:
