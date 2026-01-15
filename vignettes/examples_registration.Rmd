@@ -1,0 +1,171 @@
+---
+title: "Examples on landmark registration"
+author: "Michele Gubian"
+date: "2026-01-15"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{examples_registration}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+```{r setup}
+library(fda)
+library(tidyverse)
+library(landmarkregUtils)
+```
+
+
+
+# Landmark-register a curve from a set of landmarks
+Suppose a curve has three landmarks at time points 0, 0.5 and 1.5, where the first and last landmarks always correspond to curve start and end point (and start is always 0).
+We want to move those landmarks to new specific positions, namely 0, 1.0 and 2.0, respectively. That means, we want to obtain a time-registered version of the original curve where its landmarks have been dragged to the new specified positions. 
+This might sound artificial, but it is what we actually do whenever we compute landmark registration on a set of curves, as all the curves are modified by dragging their landmarks to new positions, which are the same for all curves and  correspond to the average time position of each landmark over the curve dataset.
+
+In the following, we show three ways to obtain the landmark-registered version of the original curve.
+
+## Option 1: use `one_landmarkreg_nocurves`
+
+### Compute $h(t)$ from a set of landmarks
+
+
+```{r}
+
+# obtain h(t)
+h <- one_landmarkreg_nocurves(
+  inputMarks = c(0, 0.5, 1.5), # the original landmarks
+  targetMarks = c(0, 1.0, 2.0) # move landmarks here
+  )
+# plot h(t): x-axis is target time axis, y-axis is original time axis
+h_tibble <- tibble(time = seq(0, 2, length.out = length(h)),
+                   h = h)
+ggplot(h_tibble) +
+  aes(time, h) +
+  geom_line() +
+  geom_hline(yintercept = 0.5, color='red', linetype = 'dashed') +
+  geom_vline(xintercept = 1.0, color='red', linetype = 'dashed') +
+  xlab("registered time") + ylab("original time") +
+  ggtitle("h(t)")
+```
+
+The dashed lines show the position of the mid landmark in the respective time axes.
+Note that the registered time axis (x-axis) ranges from 0 to 2.0, as 2.0 is the duration of the registered curve, while the original time axis (y-axis) ranges from 0 to 1.5, as 1.5 is the original curve. Note that we have not seen the curve yet, we are only operating on the time axis.
+
+### Apply a given $h(t)$ to a single curve
+Now let's create a curve that will undergo the time warping operation $h(t)$ computed above. In other words, the curve has three landmarks in the positions specified above (0, 0.5, 1.5), and we want to move them to (0, 1.0, 2.0) by applying the appropriate  $h(t)$. We use the function `applyReg()`. 
+```{r}
+# create the curve
+curve <- tibble(time = seq(0, 1.5, by = 0.05)) %>% 
+  mutate(y = 1 - (time - 0.75) **2)
+
+# plot curve and original mid landmark
+ggplot(curve) +
+  aes(time, y) +
+  geom_line() +
+  geom_vline(xintercept = 0.5, color='red', linetype = 'dashed')
+
+# We need to adapt our input to use applyReg:
+# 1) turn h(t) into a fda::fd object using fda::Data2fd
+h <- Data2fd(argvals = seq(0, 2, length.out = length(h)), y = h)
+# 2) add an id to curve, as applyReg expects many curves, each identified by an id
+regCurve <- applyReg(dat = curve %>% mutate(id = 1),
+                     reg = list(h = h), # reg expects a list with named element "h"
+                     grid = seq(0, 2, length.out = 50), # we must specify time grid in this case
+                     id = "id", time = "time", value = "y" # column names of dat 
+                     )
+# plot the two curves
+bind_rows(curve %>% mutate(curve = "original"),
+          regCurve %>% mutate(curve = "registered")) %>% 
+ggplot() +
+  aes(time, y, color = curve) +
+  geom_line() 
+  
+```
+
+## Option 2: use `landmarkreg_nocurves`
+### Compute $h(t)$ from a set of landmarks
+Perhaps it is simpler to use `landmarkreg_nocurves`.
+Normally this function is applied on a large set of landmarks from many curves, arranged as a dataframe with rows corresponding to curves and columns to landmarks. In that case the `targetMarks` are left to their default value, that is the average position of the landmarks in `inputMarks`. 
+In our case, we only have one set of landmarks in `inputMarks`, and the `targetMarks` correspond to their desired position, which we have to specify.
+
+```{r}
+reg <- landmarkreg_nocurves(
+  inputMarks = c(0, 0.5, 1.5) %>% matrix(nrow = 1), # has to be a matrix
+  targetMarks = c(0, 1.0, 2.0) 
+)
+
+```
+$h(t)$ is stored in the first element of `reg$h` in `fda:fd` format. It can be plotted directly. Or, it can be sampled with `fda::eval.fd`.
+
+```{r}
+# direct plot
+reg$h[1] %>% plot()
+# nicer plot
+regTime <- seq(0, 2, length.out = 50)
+h_tibble <- tibble(time = regTime,
+                   h = reg$h[1] %>% eval.fd(evalarg = regTime, .))
+# same plot as above
+ggplot(h_tibble) +
+  aes(time, h) +
+  geom_line() +
+  geom_hline(yintercept = 0.5, color='red', linetype = 'dashed') +
+  geom_vline(xintercept = 1.0, color='red', linetype = 'dashed') +
+  xlab("registered time") + ylab("original time") +
+  ggtitle("h(t)")
+```
+
+
+### Apply a given $h(t)$ to a single curve
+```{r}
+# use the same curve defined above
+regCurve <- applyReg(dat = curve %>% mutate(id = 1),
+                     reg = reg,
+                     id = "id", time = "time", value = "y" # column names of dat 
+                     )
+# plot the two curves
+bind_rows(curve %>% mutate(curve = "original"),
+          regCurve %>% mutate(curve = "registered")) %>% 
+ggplot() +
+  aes(time, y, color = curve) +
+  geom_line() 
+```
+
+## Option 3: use `landmarkreg_timeSamples`
+
+There is a quicker way to obtain the above operation on the curve directly. This is by using `landmarkreg_timeSamples`, which internally computes $h(t)$. The idea is to provide a regularly spaced time grid for the original time axis and specify the landmark positions. The result is the time registration of the original grid on the new time axis. This can be used directly to plot the registered curve.
+
+```{r}
+regTime <- landmarkreg_timeSamples(
+  timeSamples = curve$time,
+  inputMarks = c(0, 0.5, 1.5), # the original landmarks
+  targetMarks = c(0, 1.0, 2.0) # move landmarks here
+)
+
+# plot h(t)
+tibble(regTime = regTime, origTime = curve$time) %>% 
+  ggplot(aes(regTime, origTime)) +
+  geom_line() +
+  geom_hline(yintercept = 0.5, color='red', linetype = 'dashed') +
+  geom_vline(xintercept = 1.0, color='red', linetype = 'dashed') +
+  xlab("registered time") + ylab("original time") +
+  ggtitle("h(t)")
+
+# plot curve
+curve %>% 
+  mutate(regTime = regTime) %>% 
+  pivot_longer(c(time, regTime), names_to = "curve", values_to = "time") %>% 
+  mutate(curve = case_match(curve, "time" ~ "original", "regTime" ~ "registered")) %>% 
+  ggplot(aes(x = time, y = y, color = curve)) +
+  geom_line() 
+```
+
+
