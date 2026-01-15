@@ -30,6 +30,13 @@ You can install the development version of landmarkregUtils from [GitHub](https:
 devtools::install_github("uasolo/landmarkregUtils")
 ```
 
+There are vignettes available:
+``` {r, eval = FALSE}
+browseVignettes("landmarkregUtils")
+vignette("examples_registration", package = "landmarkregUtils")
+```
+
+
 ## Example
 
 This is a basic example which shows you how to solve a common problem:

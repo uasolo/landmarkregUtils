@@ -4,6 +4,7 @@
 # landmarkregUtils
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 The goal of landmarkregUtils is to provide a flexible version of the
@@ -24,6 +25,13 @@ You can install the development version of landmarkregUtils from
 devtools::install_github("uasolo/landmarkregUtils")
 ```
 
+There are vignettes available:
+
+``` r
+browseVignettes("landmarkregUtils")
+vignette("examples_registration", package = "landmarkregUtils")
+```
+
 ## Example
 
 This is a basic example which shows you how to solve a common problem:
@@ -40,4 +48,4 @@ lines(t_reg, x, pch=18, col="blue", type="b", lty=2, xlab="t")
 legend(0, 3, legend = c("original", "registered"), col=c("red", "blue"), lty=1:2, cex=0.8)
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="man/figures/README-example-1.png" alt="" width="100%" />
